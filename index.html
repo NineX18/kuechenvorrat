@@ -26,6 +26,12 @@
     .stat-label { color:var(--muted); font-size:.84rem }
     .stat-value { display:block; margin-top:2px; font-size:1.55rem; font-weight:750; line-height:1.25 }
     .panel { padding:20px }
+    .main-nav { display:flex; gap:8px; margin:0 0 20px; padding:6px; overflow-x:auto; border:1px solid var(--line); border-radius:12px; background:#fff }
+    .main-nav a { flex:1; min-width:105px; padding:10px 14px; border-radius:8px; color:var(--muted); font-weight:700; text-align:center; text-decoration:none; white-space:nowrap }
+    .main-nav a:hover { background:#f2f5ef; color:var(--ink) }
+    .main-nav a[aria-current="page"] { background:var(--green); color:#fff }
+    .app-page { display:none }
+    .app-page.active { display:block }
     h2 { margin:0 0 14px; font-size:1.15rem; letter-spacing:-.015em }
     .form-grid { display:grid; grid-template-columns:2fr 1.2fr 1fr 1fr 1fr auto; gap:11px; align-items:end }
     label { display:block; margin-bottom:5px; color:#4d5b51; font-size:.82rem; font-weight:650 }
@@ -83,6 +89,7 @@
     .availability { margin-top:17px; padding:16px; border-radius:11px; background:#f2f5ef; border:1px solid #dfe7dc }
     .availability h3 { margin:0 0 5px; font-size:1rem }
     .availability-summary { margin:0 0 12px; color:var(--muted); font-size:.9rem }
+    .availability a { display:inline-block; margin:0 0 12px; color:var(--green); font-weight:700 }
     .ingredient-checks { display:grid; gap:7px }
     .ingredient-check { display:flex; justify-content:space-between; gap:12px; padding:9px 11px; border-radius:8px; background:#fff; font-size:.9rem }
     .ingredient-check.missing { color:#8a3b25; background:#fff4ed }
@@ -95,11 +102,17 @@
   <header>
     <div class="wrap">
       <p class="eyebrow">Dein Küchenvorrat</p>
-      <h1>Was ist noch da?</h1>
-      <p class="intro">Behalte deine Lebensmittel im Blick und sieh sofort, was auf den Einkaufszettel gehört.</p>
+      <h1>Küchenplaner</h1>
+      <p class="intro">Vorrat, Rezepte und Wochenplan – übersichtlich an einem Ort.</p>
     </div>
   </header>
   <main>
+    <nav class="main-nav" aria-label="Hauptnavigation">
+      <a href="#bestand" data-page-link="bestand">Vorrat</a>
+      <a href="#rezepte" data-page-link="rezepte">Rezepte</a>
+      <a href="#wochenplan" data-page-link="wochenplan">Wochenplan</a>
+    </nav>
+    <section id="page-bestand" class="app-page" aria-labelledby="stockTitle">
     <section class="summary" aria-label="Übersicht">
       <div class="stat"><span class="stat-label">Produkte</span><strong class="stat-value" id="totalCount">0</strong></div>
       <div class="stat"><span class="stat-label">Im Vorrat</span><strong class="stat-value" id="stockCount">0</strong></div>
@@ -123,8 +136,15 @@
       <div class="section-head"><h2 id="stockTitle">Dein Bestand</h2><div class="list-controls"><select id="categoryFilter" class="category-filter" aria-label="Nach Aufbewahrungsort filtern"><option value="all">Alle Orte</option></select><input id="search" class="search" type="search" placeholder="Produkt suchen …" aria-label="Produkte suchen"></div></div>
       <div id="productList" class="list"></div>
     </section>
+    <section id="shoppingSection" class="shopping hidden" aria-live="polite">
+      <div class="shopping-head"><h2>🛒 Einkaufsliste</h2><button id="shareShoppingList" type="button">Einkaufsliste teilen</button></div>
+      <p>Hier stehen Produkte am Mindestbestand und Zutaten, die für den Wochenplan fehlen:</p>
+      <ul id="shoppingList"></ul>
+    </section>
+    </section>
 
-    <section class="panel section-panel" aria-labelledby="recipeTitle">
+    <section id="page-rezepte" class="app-page" aria-labelledby="recipeTitle">
+    <section class="panel section-panel">
       <h2 id="recipeTitle">Meine Rezepte</h2>
       <form id="recipeForm">
         <div><label for="recipeName">Rezeptname</label><input id="recipeName" name="recipeName" placeholder="z. B. Nudeln mit Tomatensoße" required maxlength="80"></div>
@@ -135,18 +155,15 @@
       <div id="recipeList" class="recipe-list"></div>
       <datalist id="stockProductSuggestions"></datalist>
     </section>
+    </section>
 
-    <section class="panel section-panel" aria-labelledby="plannerTitle">
+    <section id="page-wochenplan" class="app-page" aria-labelledby="plannerTitle">
+    <section class="panel section-panel">
       <h2 id="plannerTitle">Wochenplan</h2>
       <div class="week-nav"><button type="button" id="previousWeek" class="secondary" aria-label="Vorherige Woche">‹</button><strong id="weekLabel"></strong><button type="button" id="nextWeek" class="secondary" aria-label="Nächste Woche">›</button></div>
       <div id="weekDays" class="week-days"></div>
       <div id="availability" class="availability"></div>
     </section>
-
-    <section id="shoppingSection" class="shopping hidden" aria-live="polite">
-      <div class="shopping-head"><h2>🛒 Auf die Einkaufsliste</h2><button id="shareShoppingList" type="button">Einkaufsliste teilen</button></div>
-      <p>Hier stehen Produkte am Mindestbestand und Zutaten, die für den Wochenplan fehlen:</p>
-      <ul id="shoppingList"></ul>
     </section>
   </main>
   <script>
@@ -292,7 +309,8 @@
           const remainingText = item.inventory && item.shortage === 0 ? ` · nach Reservierung ${Math.max(0, item.remaining)} ${item.unit}` : '';
           return `<div class="ingredient-check ${item.shortage > 0 ? 'missing' : ''}"><span><strong>${escapeText(item.name)}</strong> · geplant ${escapeText(item.required)} ${escapeText(item.unit)}</span><span class="check-detail">Vorrat: ${escapeText(stockText)}${escapeText(remainingText)} · ${escapeText(status)}</span></div>`;
         }).join('');
-        availability.innerHTML = `<h3>Vorratscheck für den Wochenplan</h3><p class="availability-summary">${summary} Die Zutatenmengen aller geplanten Tage sind zusammengerechnet.</p><div class="ingredient-checks">${checks}</div>`;
+        const shoppingLink = shoppingNeeds(requirements).length ? '<a href="#bestand">Einkaufsliste auf der Vorratsseite ansehen →</a>' : '';
+        availability.innerHTML = `<h3>Vorratscheck für den Wochenplan</h3><p class="availability-summary">${summary} Die Zutatenmengen aller geplanten Tage sind zusammengerechnet.</p>${shoppingLink}<div class="ingredient-checks">${checks}</div>`;
       }
 
       function addIngredientRow() {
@@ -407,6 +425,18 @@
           window.prompt('Kopiere deine Einkaufsliste:', message);
         }
       });
+      function showPage() {
+        const allowed = ['bestand','rezepte','wochenplan'];
+        const page = allowed.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'bestand';
+        document.querySelectorAll('.app-page').forEach(section => section.classList.toggle('active', section.id === `page-${page}`));
+        document.querySelectorAll('[data-page-link]').forEach(link => {
+          if (link.dataset.pageLink === page) link.setAttribute('aria-current','page');
+          else link.removeAttribute('aria-current');
+        });
+      }
+      window.addEventListener('hashchange', showPage);
+      if (!location.hash) history.replaceState(null, '', '#bestand');
+      showPage();
       render();
       if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
         navigator.serviceWorker.register('./service-worker.js').catch(() => {});
