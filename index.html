@@ -48,6 +48,8 @@
     .category-filter,.type-filter { width:175px; flex:none }
     .list { display:grid; gap:10px }
     .item { display:grid; grid-template-columns:minmax(140px,1fr) minmax(125px,.85fr) minmax(125px,.85fr) auto auto auto; gap:12px; align-items:center; padding:15px 17px; background:var(--paper); border:1px solid var(--line); border-radius:12px }
+    .item.stock-red { background:#fff0ee; border-color:#e7aaa4 }
+    .item.stock-yellow { background:#fff8df; border-color:#e8d184 }
     .name { font-weight:720 }
     .detail { margin-top:2px; color:var(--muted); font-size:.84rem }
     .quantity { min-width:88px; text-align:center; font-size:1.05rem; font-weight:700; white-space:nowrap }
@@ -287,13 +289,16 @@
         const needs = shoppingNeeds(requirements);
         document.querySelector('#lowCount').textContent = needs.length;
         list.innerHTML = filtered.length ? filtered.map(p => {
-          const isLow = Number(p.quantity) <= Number(p.minimum);
+          const quantity = Number(p.quantity) || 0;
+          const minimum = Number(p.minimum) || 0;
+          const yellowLimit = minimum + Math.ceil(minimum / 2);
+          const stockState = quantity <= minimum ? 'stock-red' : quantity <= yellowLimit ? 'stock-yellow' : '';
           const locationOptions = locations.map(c => `<option value="${escapeText(c)}" ${c === (p.category || 'Ohne Kategorie') ? 'selected' : ''}>${escapeText(c)}</option>`).join('');
-          return `<article class="item">
+          return `<article class="item ${stockState}">
             <div><div class="name">${escapeText(p.name)}</div><div class="detail">Mindestbestand: ${escapeText(p.minimum)} ${escapeText(p.unit)}</div></div>
             <input class="foodcategory-select" list="foodCategorySuggestions" data-action="food-category" data-id="${escapeText(p.id)}" aria-label="Lebensmittelkategorie für ${escapeText(p.name)}" value="${escapeText(p.foodCategory || 'Ohne Kategorie')}" placeholder="Eigene Kategorie …" maxlength="40">
             <select class="category-select" data-action="category" data-id="${escapeText(p.id)}" aria-label="Aufbewahrungsort für ${escapeText(p.name)}">${locationOptions}</select>
-            <div class="quantity ${isLow ? 'low' : ''}">${escapeText(p.quantity)} ${escapeText(p.unit)}</div>
+            <div class="quantity">${escapeText(p.quantity)} ${escapeText(p.unit)}</div>
             <div class="stepper" aria-label="Menge für ${escapeText(p.name)} ändern">
               <button class="minus" type="button" data-action="decrease" data-id="${escapeText(p.id)}" aria-label="${escapeText(p.name)} verringern">−</button>
               <button type="button" data-action="increase" data-id="${escapeText(p.id)}" aria-label="${escapeText(p.name)} erhöhen">+</button>
