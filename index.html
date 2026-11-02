@@ -39,6 +39,7 @@
     input:focus-visible,button:focus-visible { outline:3px solid #8eb99a; outline-offset:2px }
     button { min-height:40px; border:0; border-radius:8px; padding:8px 13px; background:var(--green); color:#fff; font:inherit; font-weight:700; cursor:pointer }
     button:hover { background:#245239 }
+    button:disabled { opacity:.5; cursor:not-allowed }
     .add-button { min-height:43px; white-space:nowrap }
     .section-head { display:flex; justify-content:space-between; align-items:center; gap:14px; margin:27px 0 11px }
     .section-head h2 { margin:0 }
@@ -61,6 +62,7 @@
     .empty { padding:26px 18px; color:var(--muted); text-align:center; background:var(--paper); border:1px dashed #cfd7cc; border-radius:12px }
     .shopping { margin-top:24px; padding:18px 20px; border:1px solid #e6d9c5; border-radius:14px; background:#fbf5ea }
     .shopping-head { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:8px }
+    .shopping-actions { display:flex; flex-wrap:wrap; gap:8px }
     .shopping-head h2 { margin:0 }
     .shopping h2 { margin-bottom:8px }
     .shopping-head h2 { margin:0 }
@@ -80,6 +82,14 @@
     .recipe-card { display:flex; justify-content:space-between; gap:14px; align-items:flex-start; padding:13px 15px; border:1px solid var(--line); border-radius:10px; background:#fff }
     .recipe-name { font-weight:720 }
     .recipe-ingredients { margin:4px 0 0; color:var(--muted); font-size:.88rem }
+    .ranking-controls { display:flex; justify-content:space-between; align-items:center; gap:12px; margin:8px 0 15px }
+    .ranking-controls p { margin:0; color:var(--muted); font-size:.9rem }
+    .ranking-controls select { min-height:40px; padding:7px 10px; border:1px solid #d5dbd2; border-radius:8px; background:#fff; color:var(--ink); font:inherit }
+    .ranking-list { display:grid; gap:9px }
+    .ranking-card { display:grid; grid-template-columns:42px minmax(0,1fr) auto; gap:12px; align-items:center; padding:13px 15px; border:1px solid var(--line); border-radius:10px; background:#fff }
+    .rank-number { display:grid; place-items:center; width:34px; height:34px; border-radius:50%; background:var(--pale); color:var(--green); font-weight:800 }
+    .rank-details { color:var(--muted); font-size:.86rem }
+    .rank-count { color:var(--green); font-weight:750; white-space:nowrap }
     .week-nav { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px }
     .week-nav strong { text-align:center }
     .week-days { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px }
@@ -95,7 +105,7 @@
     .ingredient-check.missing { color:#8a3b25; background:#fff4ed }
     .check-detail { color:var(--muted); text-align:right }
     @media (max-width:760px) { .form-grid { grid-template-columns:repeat(2,minmax(0,1fr)) } .form-grid .product-field { grid-column:1/-1 } .add-button { grid-column:1/-1 } }
-    @media (max-width:560px) { header { padding:26px 18px 21px } main { margin-top:18px; padding:0 16px } .summary { gap:8px } .stat { padding:12px } .stat-label { font-size:.74rem } .stat-value { font-size:1.25rem } .panel { padding:16px } .item { grid-template-columns:minmax(0,1fr) auto auto; gap:9px 10px } .item > div:first-child { grid-column:1; grid-row:1 } .quantity { grid-column:2; grid-row:1; min-width:0; text-align:right } .delete { grid-column:3; grid-row:1; justify-self:end; margin:0 } .foodcategory-select { grid-column:1; grid-row:2; max-width:100% } .category-select { grid-column:2/4; grid-row:2; max-width:100% } .stepper { grid-column:2/4; grid-row:3; justify-content:flex-end } .section-head { align-items:flex-start; flex-direction:column } .list-controls { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); width:100% } .type-filter,.category-filter { width:100% } .search { grid-column:1/-1 } .shopping-head { align-items:flex-start; flex-direction:column } .ingredient-row { grid-template-columns:minmax(0,1fr) 75px 85px 36px; gap:6px } .ingredient-row input { padding:8px 7px; font-size:.9rem } .week-days { grid-template-columns:1fr } .ingredient-check { flex-direction:column; gap:2px } .check-detail { text-align:left } }
+    @media (max-width:560px) { header { padding:26px 18px 21px } main { margin-top:18px; padding:0 16px } .summary { gap:8px } .stat { padding:12px } .stat-label { font-size:.74rem } .stat-value { font-size:1.25rem } .panel { padding:16px } .item { grid-template-columns:minmax(0,1fr) auto auto; gap:9px 10px } .item > div:first-child { grid-column:1; grid-row:1 } .quantity { grid-column:2; grid-row:1; min-width:0; text-align:right } .delete { grid-column:3; grid-row:1; justify-self:end; margin:0 } .foodcategory-select { grid-column:1; grid-row:2; max-width:100% } .category-select { grid-column:2/4; grid-row:2; max-width:100% } .stepper { grid-column:2/4; grid-row:3; justify-content:flex-end } .section-head { align-items:flex-start; flex-direction:column } .list-controls { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); width:100% } .type-filter,.category-filter { width:100% } .search { grid-column:1/-1 } .shopping-head { align-items:flex-start; flex-direction:column } .shopping-actions { flex-direction:column; width:100% } .shopping-actions button { width:100% } .ingredient-row { grid-template-columns:minmax(0,1fr) 75px 85px 36px; gap:6px } .ingredient-row input { padding:8px 7px; font-size:.9rem } .week-days { grid-template-columns:1fr } .ingredient-check { flex-direction:column; gap:2px } .check-detail { text-align:left } .ranking-controls { align-items:flex-start; flex-direction:column } .ranking-card { grid-template-columns:36px minmax(0,1fr); gap:9px } .rank-count { grid-column:2; white-space:normal } }
   </style>
 </head>
 <body>
@@ -111,6 +121,7 @@
       <a href="#bestand" data-page-link="bestand">Vorrat</a>
       <a href="#rezepte" data-page-link="rezepte">Rezepte</a>
       <a href="#wochenplan" data-page-link="wochenplan">Wochenplan</a>
+      <a href="#ranking" data-page-link="ranking">Ranking</a>
     </nav>
     <section id="page-bestand" class="app-page" aria-labelledby="stockTitle">
     <section class="summary" aria-label="Übersicht">
@@ -138,8 +149,8 @@
       <div id="productList" class="list"></div>
     </section>
     <section id="shoppingSection" class="shopping hidden" aria-live="polite">
-      <div class="shopping-head"><h2>🛒 Einkaufsliste</h2><button id="shareShoppingList" type="button">Einkaufsliste teilen</button></div>
-      <p>Hier stehen Produkte am Mindestbestand und Zutaten, die für den Wochenplan fehlen:</p>
+      <div class="shopping-head"><h2>🛒 Einkaufsliste</h2><div class="shopping-actions"><button id="shareWeekList" type="button">Für die Woche teilen</button><button id="shareAllMissing" class="secondary" type="button">Alles Fehlende teilen</button></div></div>
+      <p>Die Liste zeigt die Einkaufsmenge pro Lebensmittel. Wähle, ob du nur für den Wochenplan oder alles Fehlende teilen möchtest:</p>
       <ul id="shoppingList"></ul>
     </section>
     </section>
@@ -166,6 +177,13 @@
       <div id="availability" class="availability"></div>
     </section>
     </section>
+    <section id="page-ranking" class="app-page" aria-labelledby="rankingTitle">
+      <section class="panel section-panel">
+        <h2 id="rankingTitle">Rezept-Ranking</h2>
+        <div class="ranking-controls"><p>Gezählt wird, wie oft ein Rezept in deinen gespeicherten Wochenplänen eingeplant war.</p><label>Sortierung <select id="rankingSort"><option value="least">Selten geplant zuerst</option><option value="most">Häufig geplant zuerst</option></select></label></div>
+        <div id="rankingList" class="ranking-list"></div>
+      </section>
+    </section>
   </main>
   <script>
     (() => {
@@ -182,6 +200,8 @@
       const recipeList = document.querySelector('#recipeList');
       const weekDays = document.querySelector('#weekDays');
       const availability = document.querySelector('#availability');
+      const rankingList = document.querySelector('#rankingList');
+      const rankingSort = document.querySelector('#rankingSort');
       const read = () => {
         try {
           const value = JSON.parse(localStorage.getItem(KEY) || '[]');
@@ -236,11 +256,14 @@
           const shortage = requirement ? requirement.shortage : 0;
           const restock = remaining <= Number(p.minimum);
           if (!restock && !shortage) return;
-          needs.set(`${normalized(p.name)}|${normalized(p.unit)}`, { name:p.name, unit:p.unit, quantity:Number(p.quantity), minimum:Number(p.minimum), remaining, shortage, required, restock, location:p.category || 'Ohne Kategorie' });
+          const quantity = Number(p.quantity) || 0;
+          const minimum = Number(p.minimum) || 0;
+          const buyAll = restock ? Math.max(shortage, required + minimum - quantity, minimum, 1) : shortage;
+          needs.set(`${normalized(p.name)}|${normalized(p.unit)}`, { name:p.name, unit:p.unit, quantity, minimum, remaining, shortage, required, restock, buyWeek:shortage, buyAll, location:p.category || 'Ohne Kategorie' });
         });
         requirements.filter(r => r.shortage > 0 && !r.inventory).forEach(r => {
           const mismatch = r.sameName.length > 0;
-          needs.set(`${normalized(r.name)}|${normalized(r.unit)}`, { name:r.name, unit:r.unit, quantity:0, minimum:null, remaining:-r.shortage, shortage:r.shortage, required:r.required, restock:false, location:null, unitMismatch:mismatch });
+          needs.set(`${normalized(r.name)}|${normalized(r.unit)}`, { name:r.name, unit:r.unit, quantity:0, minimum:null, remaining:-r.shortage, shortage:r.shortage, required:r.required, restock:false, buyWeek:r.shortage, buyAll:r.shortage, location:null, unitMismatch:mismatch });
         });
         return [...needs.values()].sort((a,b) => a.name.localeCompare(b.name, 'de'));
       }
@@ -279,13 +302,10 @@
         }).join('') : `<div class="empty">${products.length ? 'Kein passendes Produkt gefunden.' : 'Noch keine Produkte. Füge oben dein erstes Lebensmittel hinzu.'}</div>`;
         const shoppingSection = document.querySelector('#shoppingSection');
         shoppingSection.classList.toggle('hidden', needs.length === 0);
-        document.querySelector('#shoppingList').innerHTML = needs.map(item => {
-          const details = [];
-          if (item.shortage > 0) details.push(item.unitMismatch ? `Einheit prüfen: ${item.name} ist im Vorrat mit anderer Einheit gespeichert` : `Fehlen für den Wochenplan: ${item.shortage} ${item.unit} (benötigt ${item.required} ${item.unit}, vorhanden ${item.quantity} ${item.unit})`);
-          if (item.restock) details.push(`Nach Wochenplan: ${Math.max(0, item.remaining)} ${item.unit}; Mindestbestand: ${item.minimum} ${item.unit}`);
-          if (item.location) details.push(item.location);
-          return `<li><strong>${escapeText(item.name)}</strong> · ${details.map(escapeText).join(' · ')}</li>`;
-        }).join('');
+        const weekNeeds = needs.filter(item => item.buyWeek > 0);
+        document.querySelector('#shareWeekList').disabled = weekNeeds.length === 0;
+        document.querySelector('#shareAllMissing').disabled = needs.every(item => item.buyAll <= 0);
+        document.querySelector('#shoppingList').innerHTML = needs.filter(item => item.buyAll > 0).map(item => `<li><strong>${escapeText(item.name)}</strong> · ${escapeText(item.buyAll)} ${escapeText(item.unit)}</li>`).join('');
         renderRecipesAndPlanner(requirements);
       }
 
@@ -306,6 +326,7 @@
         const plannedDays = Object.keys(selected).filter(key => recipes.some(r => r.id === selected[key])).length;
         if (!plannedDays) {
           availability.innerHTML = '<h3>Vorratscheck</h3><p class="availability-summary">Wähle für mindestens einen Tag ein Rezept aus, um die Zutaten mit deinem Vorrat abzugleichen.</p>';
+          renderRanking();
           return;
         }
         const canCook = requirements.every(item => item.shortage === 0);
@@ -314,11 +335,34 @@
           const mismatch = item.sameName.length > 0 && !item.inventory;
           const status = item.shortage > 0 ? (mismatch ? 'Einheit prüfen' : `Fehlen: ${item.shortage} ${item.unit}`) : 'Reicht';
           const stockText = item.inventory ? `${item.quantity} ${item.unit}` : mismatch ? item.sameName.map(p => `${p.quantity} ${p.unit}`).join(', ') + ' (andere Einheit)' : `0 ${item.unit}`;
-          const remainingText = item.inventory && item.shortage === 0 ? ` · nach Reservierung ${Math.max(0, item.remaining)} ${item.unit}` : '';
-          return `<div class="ingredient-check ${item.shortage > 0 ? 'missing' : ''}"><span><strong>${escapeText(item.name)}</strong> · geplant ${escapeText(item.required)} ${escapeText(item.unit)}</span><span class="check-detail">Vorrat: ${escapeText(stockText)}${escapeText(remainingText)} · ${escapeText(status)}</span></div>`;
+          const remainingText = item.inventory ? `${Math.max(0, item.remaining)} ${item.unit}` : mismatch ? 'nicht berechenbar' : `0 ${item.unit}`;
+          return `<div class="ingredient-check ${item.shortage > 0 ? 'missing' : ''}"><span><strong>${escapeText(item.name)}</strong></span><span class="check-detail">Vorrat: ${escapeText(stockText)} · Entnahme geplant: ${escapeText(item.required)} ${escapeText(item.unit)} · Danach: ${escapeText(remainingText)} · ${escapeText(status)}</span></div>`;
         }).join('');
         const shoppingLink = shoppingNeeds(requirements).length ? '<a href="#bestand">Einkaufsliste auf der Vorratsseite ansehen →</a>' : '';
-        availability.innerHTML = `<h3>Vorratscheck für den Wochenplan</h3><p class="availability-summary">${summary} Die Zutatenmengen aller geplanten Tage sind zusammengerechnet.</p>${shoppingLink}<div class="ingredient-checks">${checks}</div>`;
+        availability.innerHTML = `<h3>Vorratscheck für den Wochenplan</h3><p class="availability-summary">${summary} Die Zutatenmengen aller geplanten Tage sind zusammengerechnet. Die Entnahme ist vorgemerkt; den Vorratszähler änderst du nach dem Kochen mit −.</p>${shoppingLink}<div class="ingredient-checks">${checks}</div>`;
+        renderRanking();
+      }
+
+      function renderRanking() {
+        const stats = new Map(recipes.map(recipe => [recipe.id, { recipe, count:0, lastDate:null }]));
+        Object.entries(plans).forEach(([mondayKey, days]) => {
+          const monday = new Date(`${mondayKey}T00:00:00`);
+          Object.entries(days || {}).forEach(([dayIndex, recipeId]) => {
+            const stat = stats.get(recipeId);
+            if (!stat) return;
+            stat.count += 1;
+            const mealDate = new Date(monday); mealDate.setDate(mealDate.getDate() + Number(dayIndex));
+            if (!stat.lastDate || mealDate > stat.lastDate) stat.lastDate = mealDate;
+          });
+        });
+        const items = [...stats.values()].sort((a,b) => {
+          const countOrder = rankingSort.value === 'most' ? b.count - a.count : a.count - b.count;
+          return countOrder || a.recipe.name.localeCompare(b.recipe.name, 'de');
+        });
+        rankingList.innerHTML = items.length ? items.map((item,index) => {
+          const last = item.lastDate ? `Zuletzt eingeplant: ${new Intl.DateTimeFormat('de-DE').format(item.lastDate)}` : 'Noch nie eingeplant';
+          return `<article class="ranking-card"><span class="rank-number">${index+1}</span><div><div class="recipe-name">${escapeText(item.recipe.name)}</div><div class="rank-details">${last}</div></div><span class="rank-count">${item.count}× eingeplant</span></article>`;
+        }).join('') : '<div class="empty">Speichere erst ein Rezept, damit es hier im Ranking erscheint.</div>';
       }
 
       function addIngredientRow() {
@@ -417,29 +461,32 @@
       categoryFilter.addEventListener('change', render);
       foodCategoryFilter.addEventListener('change', render);
       search.addEventListener('input', render);
-      document.querySelector('#shareShoppingList').addEventListener('click', async () => {
+      rankingSort.addEventListener('change', renderRanking);
+      async function shareShoppingList(mode) {
         const needs = shoppingNeeds(planRequirements());
-        const lines = needs.map(item => {
-          const details = [];
-          if (item.shortage > 0) details.push(item.unitMismatch ? 'Einheit im Vorrat prüfen' : `für den Wochenplan fehlen ${item.shortage} ${item.unit} (benötigt ${item.required}, vorhanden ${item.quantity} ${item.unit})`);
-          if (item.restock) details.push(`nach Plan ${Math.max(0, item.remaining)} ${item.unit}, Mindestbestand ${item.minimum} ${item.unit}`);
-          if (item.location) details.push(item.location);
-          return `• ${item.name} — ${details.join('; ')}`;
+        const selected = mode === 'week' ? needs.filter(item => item.buyWeek > 0) : needs.filter(item => item.buyAll > 0);
+        if (!selected.length) return;
+        const title = mode === 'week' ? 'Einkauf für die Woche' : 'Alles Fehlende';
+        const lines = selected.map(item => {
+          const quantity = mode === 'week' ? item.buyWeek : item.buyAll;
+          return `• ${item.name} — ${new Intl.NumberFormat('de-DE', { maximumFractionDigits:3 }).format(quantity)} ${item.unit}`;
         });
-        const message = `Einkaufsliste\n\n${lines.join('\n')}`;
+        const message = `${title}\n\n${lines.join('\n')}`;
         if (navigator.share) {
-          try { await navigator.share({ title: 'Einkaufsliste', text: message }); return; }
+          try { await navigator.share({ title, text: message }); return; }
           catch (error) { if (error.name === 'AbortError') return; }
         }
         try {
           await navigator.clipboard.writeText(message);
-          alert('Einkaufsliste kopiert. Du kannst sie jetzt in eine Nachricht oder E-Mail einfügen.');
+          alert('Die Liste wurde kopiert. Du kannst sie jetzt in eine Nachricht oder E-Mail einfügen.');
         } catch {
           window.prompt('Kopiere deine Einkaufsliste:', message);
         }
-      });
+      }
+      document.querySelector('#shareWeekList').addEventListener('click', () => shareShoppingList('week'));
+      document.querySelector('#shareAllMissing').addEventListener('click', () => shareShoppingList('all'));
       function showPage() {
-        const allowed = ['bestand','rezepte','wochenplan'];
+        const allowed = ['bestand','rezepte','wochenplan','ranking'];
         const page = allowed.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'bestand';
         document.querySelectorAll('.app-page').forEach(section => section.classList.toggle('active', section.id === `page-${page}`));
         document.querySelectorAll('[data-page-link]').forEach(link => {
