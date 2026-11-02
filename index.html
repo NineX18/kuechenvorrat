@@ -149,8 +149,8 @@
       <div id="productList" class="list"></div>
     </section>
     <section id="shoppingSection" class="shopping hidden" aria-live="polite">
-      <div class="shopping-head"><h2>🛒 Einkaufsliste</h2><div class="shopping-actions"><button id="shareWeekList" type="button">Für die Woche teilen</button><button id="shareAllMissing" class="secondary" type="button">Alles Fehlende teilen</button></div></div>
-      <p>Die Liste zeigt die Einkaufsmenge pro Lebensmittel. Wähle, ob du nur für den Wochenplan oder alles Fehlende teilen möchtest:</p>
+      <div class="shopping-head"><h2>🛒 Einkaufsliste</h2><div class="shopping-actions"><button id="shareWeekList" type="button">Für die Woche einkaufen</button><button id="shareAllMissing" class="secondary" type="button">Alles Fehlende einkaufen</button></div></div>
+      <p>„Für die Woche“ listet die Zutatenmengen deiner geplanten Rezepte. „Alles Fehlende“ ergänzt Produkte, die nach dem Wochenplan am Mindestbestand liegen.</p>
       <ul id="shoppingList"></ul>
     </section>
     </section>
@@ -255,15 +255,16 @@
           const remaining = Number(p.quantity) - required;
           const shortage = requirement ? requirement.shortage : 0;
           const restock = remaining <= Number(p.minimum);
-          if (!restock && !shortage) return;
+          if (!requirement && !restock) return;
           const quantity = Number(p.quantity) || 0;
           const minimum = Number(p.minimum) || 0;
-          const buyAll = restock ? Math.max(shortage, required + minimum - quantity, minimum, 1) : shortage;
-          needs.set(`${normalized(p.name)}|${normalized(p.unit)}`, { name:p.name, unit:p.unit, quantity, minimum, remaining, shortage, required, restock, buyWeek:shortage, buyAll, location:p.category || 'Ohne Kategorie' });
+          const buyWeek = requirement ? required : 0;
+          const buyAll = requirement ? required + Math.max(0, minimum - quantity) : Math.max(1, minimum - quantity);
+          needs.set(`${normalized(p.name)}|${normalized(p.unit)}`, { name:p.name, unit:p.unit, quantity, minimum, remaining, shortage, required, restock, buyWeek, buyAll, location:p.category || 'Ohne Kategorie' });
         });
-        requirements.filter(r => r.shortage > 0 && !r.inventory).forEach(r => {
+        requirements.filter(r => !r.inventory).forEach(r => {
           const mismatch = r.sameName.length > 0;
-          needs.set(`${normalized(r.name)}|${normalized(r.unit)}`, { name:r.name, unit:r.unit, quantity:0, minimum:null, remaining:-r.shortage, shortage:r.shortage, required:r.required, restock:false, buyWeek:r.shortage, buyAll:r.shortage, location:null, unitMismatch:mismatch });
+          needs.set(`${normalized(r.name)}|${normalized(r.unit)}`, { name:r.name, unit:r.unit, quantity:0, minimum:null, remaining:-r.shortage, shortage:r.shortage, required:r.required, restock:false, buyWeek:r.required, buyAll:r.required, location:null, unitMismatch:mismatch });
         });
         return [...needs.values()].sort((a,b) => a.name.localeCompare(b.name, 'de'));
       }
