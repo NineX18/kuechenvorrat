@@ -1,0 +1,14 @@
+{
+  "name": "Küchenvorrat",
+  "short_name": "Vorrat",
+  "description": "Lebensmittelbestand und Einkaufsliste verwalten",
+  "lang": "de",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f4ed",
+  "theme_color": "#e8efe5",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
