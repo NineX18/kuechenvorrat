@@ -33,7 +33,7 @@
     .app-page { display:none }
     .app-page.active { display:block }
     h2 { margin:0 0 14px; font-size:1.15rem; letter-spacing:-.015em }
-    .form-grid { display:grid; grid-template-columns:2fr 1.2fr 1fr 1fr 1fr auto; gap:11px; align-items:end }
+    .form-grid { display:grid; grid-template-columns:2fr 1.3fr 1.2fr 1fr 1fr 1fr auto; gap:11px; align-items:end }
     label { display:block; margin-bottom:5px; color:#4d5b51; font-size:.82rem; font-weight:650 }
     input { width:100%; min-height:43px; padding:9px 11px; border:1px solid #d5dbd2; border-radius:8px; background:#fff; color:var(--ink); font:inherit }
     input:focus-visible,button:focus-visible { outline:3px solid #8eb99a; outline-offset:2px }
@@ -42,16 +42,16 @@
     .add-button { min-height:43px; white-space:nowrap }
     .section-head { display:flex; justify-content:space-between; align-items:center; gap:14px; margin:27px 0 11px }
     .section-head h2 { margin:0 }
-    .list-controls { display:flex; gap:9px; width:min(100%,460px) }
+    .list-controls { display:flex; gap:9px; width:min(100%,610px) }
     .search { flex:1; min-width:0 }
-    .category-filter { width:180px; flex:none }
+    .category-filter,.type-filter { width:175px; flex:none }
     .list { display:grid; gap:10px }
-    .item { display:grid; grid-template-columns:minmax(150px,1fr) minmax(125px,.8fr) auto auto auto; gap:14px; align-items:center; padding:15px 17px; background:var(--paper); border:1px solid var(--line); border-radius:12px }
+    .item { display:grid; grid-template-columns:minmax(140px,1fr) minmax(125px,.85fr) minmax(125px,.85fr) auto auto auto; gap:12px; align-items:center; padding:15px 17px; background:var(--paper); border:1px solid var(--line); border-radius:12px }
     .name { font-weight:720 }
     .detail { margin-top:2px; color:var(--muted); font-size:.84rem }
     .quantity { min-width:88px; text-align:center; font-size:1.05rem; font-weight:700; white-space:nowrap }
     .quantity.low { color:var(--orange) }
-    .category-select { min-height:38px; padding:6px 9px; border:1px solid #d5dbd2; border-radius:8px; background:#fff; color:var(--ink); font:inherit; font-size:.88rem }
+    .category-select,.foodcategory-select { min-height:38px; padding:6px 9px; border:1px solid #d5dbd2; border-radius:8px; background:#fff; color:var(--ink); font:inherit; font-size:.88rem; min-width:0 }
     .stepper { display:flex; align-items:center; gap:8px }
     .stepper button { width:36px; height:36px; min-height:36px; padding:0; font-size:1.2rem }
     .stepper .minus { border:1px solid #cfd8ce; background:#fff; color:var(--ink) }
@@ -95,7 +95,7 @@
     .ingredient-check.missing { color:#8a3b25; background:#fff4ed }
     .check-detail { color:var(--muted); text-align:right }
     @media (max-width:760px) { .form-grid { grid-template-columns:repeat(2,minmax(0,1fr)) } .form-grid .product-field { grid-column:1/-1 } .add-button { grid-column:1/-1 } }
-    @media (max-width:560px) { header { padding:26px 18px 21px } main { margin-top:18px; padding:0 16px } .summary { gap:8px } .stat { padding:12px } .stat-label { font-size:.74rem } .stat-value { font-size:1.25rem } .panel { padding:16px } .item { grid-template-columns:minmax(0,1fr) auto auto; gap:9px 10px } .item > div:first-child { grid-column:1; grid-row:1 } .quantity { grid-column:2; grid-row:1; min-width:0; text-align:right } .delete { grid-column:3; grid-row:1; justify-self:end; margin:0 } .category-select { grid-column:1; grid-row:2; max-width:100% } .stepper { grid-column:2/4; grid-row:2; justify-content:flex-end } .section-head { align-items:flex-start; flex-direction:column } .list-controls { width:100% } .category-filter { width:145px } .shopping-head { align-items:flex-start; flex-direction:column } .ingredient-row { grid-template-columns:minmax(0,1fr) 75px 85px 36px; gap:6px } .ingredient-row input { padding:8px 7px; font-size:.9rem } .week-days { grid-template-columns:1fr } .ingredient-check { flex-direction:column; gap:2px } .check-detail { text-align:left } }
+    @media (max-width:560px) { header { padding:26px 18px 21px } main { margin-top:18px; padding:0 16px } .summary { gap:8px } .stat { padding:12px } .stat-label { font-size:.74rem } .stat-value { font-size:1.25rem } .panel { padding:16px } .item { grid-template-columns:minmax(0,1fr) auto auto; gap:9px 10px } .item > div:first-child { grid-column:1; grid-row:1 } .quantity { grid-column:2; grid-row:1; min-width:0; text-align:right } .delete { grid-column:3; grid-row:1; justify-self:end; margin:0 } .foodcategory-select { grid-column:1; grid-row:2; max-width:100% } .category-select { grid-column:2/4; grid-row:2; max-width:100% } .stepper { grid-column:2/4; grid-row:3; justify-content:flex-end } .section-head { align-items:flex-start; flex-direction:column } .list-controls { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); width:100% } .type-filter,.category-filter { width:100% } .search { grid-column:1/-1 } .shopping-head { align-items:flex-start; flex-direction:column } .ingredient-row { grid-template-columns:minmax(0,1fr) 75px 85px 36px; gap:6px } .ingredient-row input { padding:8px 7px; font-size:.9rem } .week-days { grid-template-columns:1fr } .ingredient-check { flex-direction:column; gap:2px } .check-detail { text-align:left } }
   </style>
 </head>
 <body>
@@ -123,6 +123,7 @@
       <h2 id="addTitle">Produkt hinzufügen</h2>
       <form id="productForm" class="form-grid">
         <div class="product-field"><label for="productName">Produkt</label><input id="productName" name="name" placeholder="z. B. Zwiebeln" required maxlength="70"></div>
+        <div><label for="productFoodCategory">Lebensmittelkategorie</label><input id="productFoodCategory" name="foodCategory" list="foodCategorySuggestions" placeholder="Eigene Kategorie eingeben …" maxlength="40"><datalist id="foodCategorySuggestions"><option value="Milchprodukte"><option value="Obst und Gemüse"><option value="Fleisch und Fisch"><option value="Backwaren"><option value="Nudeln, Reis und Getreide"><option value="Konserven"><option value="Getränke"><option value="Tiefkühlkost"><option value="Süßigkeiten"><option value="Gewürze"><option value="Sonstiges"></datalist></div>
         <div><label for="productCategory">Aufbewahrungsort</label><input id="productCategory" name="category" list="locationSuggestions" placeholder="z. B. Gefrierschrank" maxlength="40"><datalist id="locationSuggestions"><option value="Vorratsraum"><option value="Küchenschrank"><option value="Kühlschrank"><option value="Gefrierschrank"><option value="Obst- und Gemüsefach"><option value="Keller"><option value="Sonstiges"></datalist></div>
         <div><label for="productUnit">Einheit</label><input id="productUnit" name="unit" value="Stück" maxlength="20" required></div>
         <div><label for="productQty">Menge jetzt</label><input id="productQty" name="quantity" type="number" min="0" step="any" value="0" required></div>
@@ -133,7 +134,7 @@
     </section>
 
     <section aria-labelledby="stockTitle">
-      <div class="section-head"><h2 id="stockTitle">Dein Bestand</h2><div class="list-controls"><select id="categoryFilter" class="category-filter" aria-label="Nach Aufbewahrungsort filtern"><option value="all">Alle Orte</option></select><input id="search" class="search" type="search" placeholder="Produkt suchen …" aria-label="Produkte suchen"></div></div>
+      <div class="section-head"><h2 id="stockTitle">Dein Bestand</h2><div class="list-controls"><select id="foodCategoryFilter" class="type-filter" aria-label="Nach Lebensmittelkategorie filtern"><option value="all">Alle Kategorien</option></select><select id="categoryFilter" class="category-filter" aria-label="Nach Aufbewahrungsort filtern"><option value="all">Alle Orte</option></select><input id="search" class="search" type="search" placeholder="Produkt suchen …" aria-label="Produkte suchen"></div></div>
       <div id="productList" class="list"></div>
     </section>
     <section id="shoppingSection" class="shopping hidden" aria-live="polite">
@@ -175,6 +176,7 @@
       const list = document.querySelector('#productList');
       const search = document.querySelector('#search');
       const categoryFilter = document.querySelector('#categoryFilter');
+      const foodCategoryFilter = document.querySelector('#foodCategoryFilter');
       const recipeForm = document.querySelector('#recipeForm');
       const ingredientRows = document.querySelector('#ingredientRows');
       const recipeList = document.querySelector('#recipeList');
@@ -183,7 +185,7 @@
       const read = () => {
         try {
           const value = JSON.parse(localStorage.getItem(KEY) || '[]');
-          return Array.isArray(value) ? value.filter(p => p && typeof p.id === 'string' && typeof p.name === 'string').map(p => ({ ...p, category: String(p.category || 'Ohne Kategorie') })) : [];
+          return Array.isArray(value) ? value.filter(p => p && typeof p.id === 'string' && typeof p.name === 'string').map(p => ({ ...p, category: String(p.category || 'Ohne Kategorie'), foodCategory:String(p.foodCategory || 'Ohne Kategorie') })) : [];
         } catch { return []; }
       };
       let products = read();
@@ -198,6 +200,7 @@
       const savePlans = () => localStorage.setItem(PLAN_KEY, JSON.stringify(plans));
       const escapeText = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
       const normalized = value => String(value || '').trim().toLocaleLowerCase('de');
+      const foodCategoryChoices = ['Milchprodukte','Obst und Gemüse','Fleisch und Fisch','Backwaren','Nudeln, Reis und Getreide','Konserven','Getränke','Tiefkühlkost','Süßigkeiten','Gewürze','Sonstiges'];
       const dayNames = ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
       function mondayOf(date) { const d = new Date(date.getFullYear(), date.getMonth(), date.getDate()); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d; }
       function dateKey(date) { return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`; }
@@ -243,13 +246,17 @@
       }
 
       function render() {
-        const categories = [...new Set(products.map(p => p.category || 'Ohne Kategorie'))].sort((a,b) => a.localeCompare(b, 'de'));
+        const locations = [...new Set(products.map(p => p.category || 'Ohne Kategorie'))].sort((a,b) => a.localeCompare(b, 'de'));
+        const foodCategories = [...new Set([...foodCategoryChoices, ...products.map(p => p.foodCategory || 'Ohne Kategorie')])].sort((a,b) => a.localeCompare(b, 'de'));
         const selectedCategory = categoryFilter.value;
-        categoryFilter.innerHTML = '<option value="all">Alle Orte</option>' + categories.map(c => `<option value="${escapeText(c)}">${escapeText(c)}</option>`).join('');
-        if (selectedCategory === 'all' || categories.includes(selectedCategory)) categoryFilter.value = selectedCategory || 'all';
-        const ordered = [...products].sort((a,b) => (a.category || 'Ohne Kategorie').localeCompare(b.category || 'Ohne Kategorie', 'de') || a.name.localeCompare(b.name, 'de'));
+        const selectedFoodCategory = foodCategoryFilter.value;
+        categoryFilter.innerHTML = '<option value="all">Alle Orte</option>' + locations.map(c => `<option value="${escapeText(c)}">${escapeText(c)}</option>`).join('');
+        foodCategoryFilter.innerHTML = '<option value="all">Alle Kategorien</option>' + foodCategories.map(c => `<option value="${escapeText(c)}">${escapeText(c)}</option>`).join('');
+        if (selectedCategory === 'all' || locations.includes(selectedCategory)) categoryFilter.value = selectedCategory || 'all';
+        if (selectedFoodCategory === 'all' || foodCategories.includes(selectedFoodCategory)) foodCategoryFilter.value = selectedFoodCategory || 'all';
+        const ordered = [...products].sort((a,b) => (a.foodCategory || 'Ohne Kategorie').localeCompare(b.foodCategory || 'Ohne Kategorie', 'de') || (a.category || 'Ohne Kategorie').localeCompare(b.category || 'Ohne Kategorie', 'de') || a.name.localeCompare(b.name, 'de'));
         const query = search.value.trim().toLocaleLowerCase('de');
-        const filtered = ordered.filter(p => (categoryFilter.value === 'all' || (p.category || 'Ohne Kategorie') === categoryFilter.value) && p.name.toLocaleLowerCase('de').includes(query));
+        const filtered = ordered.filter(p => (categoryFilter.value === 'all' || (p.category || 'Ohne Kategorie') === categoryFilter.value) && (foodCategoryFilter.value === 'all' || (p.foodCategory || 'Ohne Kategorie') === foodCategoryFilter.value) && p.name.toLocaleLowerCase('de').includes(query));
         document.querySelector('#totalCount').textContent = products.length;
         document.querySelector('#stockCount').textContent = products.reduce((sum,p) => sum + Number(p.quantity || 0), 0);
         const requirements = planRequirements();
@@ -257,10 +264,11 @@
         document.querySelector('#lowCount').textContent = needs.length;
         list.innerHTML = filtered.length ? filtered.map(p => {
           const isLow = Number(p.quantity) <= Number(p.minimum);
-          const categoryOptions = categories.map(c => `<option value="${escapeText(c)}" ${c === (p.category || 'Ohne Kategorie') ? 'selected' : ''}>${escapeText(c)}</option>`).join('');
+          const locationOptions = locations.map(c => `<option value="${escapeText(c)}" ${c === (p.category || 'Ohne Kategorie') ? 'selected' : ''}>${escapeText(c)}</option>`).join('');
           return `<article class="item">
             <div><div class="name">${escapeText(p.name)}</div><div class="detail">Mindestbestand: ${escapeText(p.minimum)} ${escapeText(p.unit)}</div></div>
-            <select class="category-select" data-action="category" data-id="${escapeText(p.id)}" aria-label="Aufbewahrungsort für ${escapeText(p.name)}">${categoryOptions}</select>
+            <input class="foodcategory-select" list="foodCategorySuggestions" data-action="food-category" data-id="${escapeText(p.id)}" aria-label="Lebensmittelkategorie für ${escapeText(p.name)}" value="${escapeText(p.foodCategory || 'Ohne Kategorie')}" placeholder="Eigene Kategorie …" maxlength="40">
+            <select class="category-select" data-action="category" data-id="${escapeText(p.id)}" aria-label="Aufbewahrungsort für ${escapeText(p.name)}">${locationOptions}</select>
             <div class="quantity ${isLow ? 'low' : ''}">${escapeText(p.quantity)} ${escapeText(p.unit)}</div>
             <div class="stepper" aria-label="Menge für ${escapeText(p.name)} ändern">
               <button class="minus" type="button" data-action="decrease" data-id="${escapeText(p.id)}" aria-label="${escapeText(p.name)} verringern">−</button>
@@ -366,6 +374,7 @@
         event.preventDefault();
         const data = new FormData(form);
         const name = String(data.get('name')).trim();
+        const foodCategory = String(data.get('foodCategory')).trim() || 'Sonstiges';
         const category = String(data.get('category')).trim() || 'Ohne Kategorie';
         const unit = String(data.get('unit')).trim() || 'Stück';
         const quantity = Math.max(0, Number(data.get('quantity')) || 0);
@@ -376,8 +385,9 @@
           existing.quantity = quantity;
           existing.minimum = minimum;
           existing.category = category;
+          existing.foodCategory = foodCategory;
         } else {
-          products.push({ id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random(), name, unit, category, quantity, minimum });
+          products.push({ id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random(), name, unit, category, foodCategory, quantity, minimum });
         }
         save(); form.reset(); document.querySelector('#productUnit').value = 'Stück';
         document.querySelector('#productQty').value = '0'; document.querySelector('#productMin').value = '0';
@@ -395,14 +405,17 @@
         save(); render();
       });
       list.addEventListener('change', event => {
-        const select = event.target.closest('select[data-action="category"]');
+        const select = event.target.closest('[data-action]');
         if (!select) return;
         const product = products.find(p => p.id === select.dataset.id);
         if (!product) return;
-        product.category = select.value;
+        if (select.dataset.action === 'food-category') product.foodCategory = select.value;
+        else if (select.dataset.action === 'category') product.category = select.value;
+        else return;
         save(); render();
       });
       categoryFilter.addEventListener('change', render);
+      foodCategoryFilter.addEventListener('change', render);
       search.addEventListener('input', render);
       document.querySelector('#shareShoppingList').addEventListener('click', async () => {
         const needs = shoppingNeeds(planRequirements());
