@@ -50,6 +50,7 @@
     .item { display:grid; grid-template-columns:minmax(140px,1fr) minmax(125px,.85fr) minmax(125px,.85fr) auto auto auto; gap:12px; align-items:center; padding:15px 17px; background:var(--paper); border:1px solid var(--line); border-radius:12px }
     .item.stock-red { background:#fff0ee; border-color:#e7aaa4 }
     .item.stock-yellow { background:#fff8df; border-color:#e8d184 }
+    .item-comment { grid-column:1/-1; width:100%; min-height:38px; padding:8px 10px; border:1px solid #d5dbd2; border-radius:8px; background:#ffffffb8; color:var(--ink); font:inherit; font-size:.9rem; resize:vertical }
     .name { font-weight:720 }
     .detail { margin-top:2px; color:var(--muted); font-size:.84rem }
     .quantity { min-width:88px; text-align:center; font-size:1.05rem; font-weight:700; white-space:nowrap }
@@ -84,6 +85,7 @@
     .recipe-card { display:flex; justify-content:space-between; gap:14px; align-items:flex-start; padding:13px 15px; border:1px solid var(--line); border-radius:10px; background:#fff }
     .recipe-name { font-weight:720 }
     .recipe-ingredients { margin:4px 0 0; color:var(--muted); font-size:.88rem }
+    .recipe-comment { margin:5px 0 0; color:#526257; font-size:.88rem; white-space:pre-wrap }
     .ranking-controls { display:flex; justify-content:space-between; align-items:center; gap:12px; margin:8px 0 15px }
     .ranking-controls p { margin:0; color:var(--muted); font-size:.9rem }
     .ranking-controls select { min-height:40px; padding:7px 10px; border:1px solid #d5dbd2; border-radius:8px; background:#fff; color:var(--ink); font:inherit }
@@ -161,7 +163,8 @@
     <section class="panel section-panel">
       <h2 id="recipeTitle">Meine Rezepte</h2>
       <form id="recipeForm">
-        <div><label for="recipeName">Rezeptname</label><input id="recipeName" name="recipeName" placeholder="z. B. Nudeln mit Tomatensoße" required maxlength="80"></div>
+        <div class="form-grid" style="grid-template-columns:2fr 1fr; margin-bottom:10px"><div><label for="recipeName">Rezeptname</label><input id="recipeName" name="recipeName" placeholder="z. B. Nudeln mit Tomatensoße" required maxlength="80"></div><div><label for="recipeTime">Zubereitungszeit (Minuten)</label><input id="recipeTime" name="recipeTime" type="number" min="1" step="1" placeholder="z. B. 30"></div></div>
+        <div style="margin-bottom:10px"><label for="recipeComment">Kommentar / Notiz</label><textarea id="recipeComment" name="recipeComment" rows="2" placeholder="z. B. mild würzen, am Vortag vorbereiten …" maxlength="500"></textarea></div>
         <div class="note">Trage Zutaten mit der gleichen Schreibweise und Einheit wie im Vorrat ein, damit sie richtig abgeglichen werden.</div>
         <div id="ingredientRows"></div>
         <div class="form-actions"><button type="button" id="addIngredient" class="secondary">＋ Zutat hinzufügen</button><button type="submit">Rezept speichern</button></div>
@@ -303,7 +306,9 @@
               <button class="minus" type="button" data-action="decrease" data-id="${escapeText(p.id)}" aria-label="${escapeText(p.name)} verringern">−</button>
               <button type="button" data-action="increase" data-id="${escapeText(p.id)}" aria-label="${escapeText(p.name)} erhöhen">+</button>
             </div>
+            <button class="secondary" type="button" data-action="edit" data-id="${escapeText(p.id)}" aria-label="${escapeText(p.name)} bearbeiten">Bearbeiten</button>
             <button class="delete" type="button" data-action="delete" data-id="${escapeText(p.id)}" aria-label="${escapeText(p.name)} entfernen" title="Produkt entfernen">×</button>
+            <textarea class="item-comment" data-action="comment" data-id="${escapeText(p.id)}" rows="1" placeholder="Kommentar zum Lebensmittel …" aria-label="Kommentar zu ${escapeText(p.name)}" maxlength="300">${escapeText(p.comment || '')}</textarea>
           </article>`;
         }).join('') : `<div class="empty">${products.length ? 'Kein passendes Produkt gefunden.' : 'Noch keine Produkte. Füge oben dein erstes Lebensmittel hinzu.'}</div>`;
         const shoppingSection = document.querySelector('#shoppingSection');
@@ -318,14 +323,14 @@
       function renderRecipesAndPlanner(requirements) {
         const suggestions = [...new Set(products.map(p => p.name))].sort((a,b) => a.localeCompare(b, 'de'));
         document.querySelector('#stockProductSuggestions').innerHTML = suggestions.map(name => `<option value="${escapeText(name)}">`).join('');
-        recipeList.innerHTML = recipes.length ? recipes.map(recipe => `<article class="recipe-card"><div><div class="recipe-name">${escapeText(recipe.name)}</div><p class="recipe-ingredients">${recipe.ingredients.map(i => `${escapeText(i.name)}: ${escapeText(i.quantity)} ${escapeText(i.unit)}`).join(' · ')}</p></div><button class="delete" type="button" data-delete-recipe="${escapeText(recipe.id)}" aria-label="Rezept ${escapeText(recipe.name)} löschen" title="Rezept löschen">×</button></article>`).join('') : '<div class="empty">Noch keine Rezepte gespeichert. Lege oben dein erstes Rezept an.</div>';
+        recipeList.innerHTML = recipes.length ? recipes.map(recipe => `<article class="recipe-card"><div><div class="recipe-name">${escapeText(recipe.name)}${recipe.time ? ` · ${escapeText(recipe.time)} Min.` : ''}</div><p class="recipe-ingredients">${recipe.ingredients.map(i => `${escapeText(i.name)}: ${escapeText(i.quantity)} ${escapeText(i.unit)}`).join(' · ')}</p>${recipe.comment ? `<p class="recipe-comment">${escapeText(recipe.comment)}</p>` : ''}</div><button class="delete" type="button" data-delete-recipe="${escapeText(recipe.id)}" aria-label="Rezept ${escapeText(recipe.name)} löschen" title="Rezept löschen">×</button></article>`).join('') : '<div class="empty">Noch keine Rezepte gespeichert. Lege oben dein erstes Rezept an.</div>';
 
         const weekEnd = new Date(currentWeek); weekEnd.setDate(weekEnd.getDate() + 6);
         document.querySelector('#weekLabel').textContent = `${dateLabel(currentWeek)} – ${dateLabel(weekEnd)}`;
         const selected = plans[weekKey()] || {};
         weekDays.innerHTML = dayNames.map((day, index) => {
           const date = new Date(currentWeek); date.setDate(date.getDate() + index);
-          const options = ['<option value="">Kein Rezept geplant</option>', ...recipes.map(r => `<option value="${escapeText(r.id)}" ${selected[index] === r.id ? 'selected' : ''}>${escapeText(r.name)}</option>`)].join('');
+          const options = ['<option value="">Kein Rezept geplant</option>', ...recipes.map(r => `<option value="${escapeText(r.id)}" ${selected[index] === r.id ? 'selected' : ''}>${escapeText(r.name)}${r.time ? ` · ${escapeText(r.time)} Min.` : ''}</option>`)].join('');
           return `<div class="day-card"><label for="planDay${index}">${day}, ${dateLabel(date)}</label><select id="planDay${index}" data-plan-day="${index}">${options}</select></div>`;
         }).join('');
 
@@ -393,7 +398,9 @@
           unit:row.querySelector('.ingredient-unit').value.trim()
         }));
         if (!name || !ingredients.length || ingredients.some(i => !i.name || !i.unit || !Number.isFinite(i.quantity) || i.quantity <= 0)) return;
-        recipes.push({ id:crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random(), name, ingredients });
+        const time = Math.max(0, Math.floor(Number(document.querySelector('#recipeTime').value) || 0));
+        const comment = document.querySelector('#recipeComment').value.trim();
+        recipes.push({ id:crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random(), name, ingredients, time, comment });
         saveRecipes(); recipeForm.reset(); ingredientRows.innerHTML = ''; addIngredientRow(); render();
       });
       recipeList.addEventListener('click', event => {
@@ -449,6 +456,16 @@
         if (!button) return;
         const product = products.find(p => p.id === button.dataset.id);
         if (!product) return;
+        if (button.dataset.action === 'edit') {
+          const name = prompt('Produktname:', product.name);
+          if (name === null) return;
+          const unit = prompt('Einheit:', product.unit || 'Stück');
+          if (unit === null) return;
+          const minimum = prompt('Mindestbestand:', String(product.minimum ?? 0));
+          if (minimum === null || !Number.isFinite(Number(minimum)) || Number(minimum) < 0 || !name.trim() || !unit.trim()) return;
+          product.name = name.trim(); product.unit = unit.trim(); product.minimum = Number(minimum);
+          save(); render(); return;
+        }
         if (button.dataset.action === 'increase') product.quantity = Number(product.quantity) + 1;
         if (button.dataset.action === 'decrease') product.quantity = Math.max(0, Number(product.quantity) - 1);
         if (button.dataset.action === 'delete') products = products.filter(p => p.id !== product.id);
@@ -459,6 +476,7 @@
         if (!select) return;
         const product = products.find(p => p.id === select.dataset.id);
         if (!product) return;
+        if (select.dataset.action === 'comment') { product.comment = select.value.trim(); save(); return; }
         if (select.dataset.action === 'food-category') product.foodCategory = select.value;
         else if (select.dataset.action === 'category') product.category = select.value;
         else return;
