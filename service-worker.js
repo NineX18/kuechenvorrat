@@ -1,4 +1,4 @@
-const CACHE = 'kuechenvorrat-v14';
+const CACHE = 'kuechenvorrat-v15';
 const FILES = ['./', './index.html', './vorrat.html', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', event => {
