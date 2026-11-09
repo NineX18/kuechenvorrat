@@ -62,6 +62,8 @@
     .stepper .minus:hover { background:#f0f3ed }
     .delete { width:36px; min-height:36px; padding:0; background:transparent; color:#68746b; font-size:1.1rem }
     .delete:hover { background:#f8e9e5; color:#8a3528 }
+    .delete-product { min-height:36px; padding:6px 10px; border:1px solid #e4b8b2; background:#fff4f2; color:#8a3528; font-size:.88rem }
+    .delete-product:hover { background:#f8e9e5; color:#70291f }
     .empty { padding:26px 18px; color:var(--muted); text-align:center; background:var(--paper); border:1px dashed #cfd7cc; border-radius:12px }
     .shopping { margin-top:24px; padding:18px 20px; border:1px solid #e6d9c5; border-radius:14px; background:#fbf5ea }
     .shopping-head { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:8px }
@@ -307,7 +309,7 @@
               <button type="button" data-action="increase" data-id="${escapeText(p.id)}" aria-label="${escapeText(p.name)} erhöhen">+</button>
             </div>
             <button class="secondary" type="button" data-action="edit" data-id="${escapeText(p.id)}" aria-label="${escapeText(p.name)} bearbeiten">Bearbeiten</button>
-            <button class="delete" type="button" data-action="delete" data-id="${escapeText(p.id)}" aria-label="${escapeText(p.name)} entfernen" title="Produkt entfernen">×</button>
+            <button class="delete-product" type="button" data-action="delete" data-id="${escapeText(p.id)}" aria-label="${escapeText(p.name)} löschen" title="Produkt löschen">Löschen</button>
             <textarea class="item-comment" data-action="comment" data-id="${escapeText(p.id)}" rows="1" placeholder="Kommentar zum Lebensmittel …" aria-label="Kommentar zu ${escapeText(p.name)}" maxlength="300">${escapeText(p.comment || '')}</textarea>
           </article>`;
         }).join('') : `<div class="empty">${products.length ? 'Kein passendes Produkt gefunden.' : 'Noch keine Produkte. Füge oben dein erstes Lebensmittel hinzu.'}</div>`;
